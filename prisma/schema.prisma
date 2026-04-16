@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+ 
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String
+  role         String    @default("user")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  persons      Person[]
+  groups       Group[]
+
+  @@map("users")
+}
+
+model Person {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  userId    Int       @map("user_id")
+  user      User      @relation(fields: [userId], references: [id])
+
+  address   Address?
+  profile   Profile?
+  groups    Group[]   @relation("PersonGroups")
+
+  @@map("persons")
+}
+
+model Address {
+  id        Int     @id @default(autoincrement())
+  street    String
+  city      String
+  state     String
+
+  personId  Int     @unique @map("person_id")
+  person    Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  countryId Int     @map("country_id")
+  country   Country @relation(fields: [countryId], references: [id])
+
+  @@map("addresses")
+}
+
+model Profile {
+  id         Int     @id @default(autoincrement())
+  profilePic String? @map("profile_pic")
+  website    String?
+
+  personId   Int    @unique @map("person_id")
+  person     Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Group {
+  id      Int      @id @default(autoincrement())
+  name    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId  Int      @map("user_id")
+  user    User     @relation(fields: [userId], references: [id])
+
+  persons Person[] @relation("PersonGroups")
+
+  @@map("groups")
+}
+
+model Country {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String
+
+  addresses Address[]
+
+  @@map("countries")
+}
