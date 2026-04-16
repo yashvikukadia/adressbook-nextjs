@@ -40,7 +40,10 @@ export async function POST(request) {
     setAuthCookies(response, accessToken, refreshToken);
     return response;
   } catch (error) {
-    console.error('Register error:', error);
-    return NextResponse.json({ detail: 'Internal server error' }, { status: 500 });
+    console.error('Register error full details:', error);
+    return NextResponse.json(
+      { detail: 'Internal server error', message: error.message, stack: error.stack }, 
+      { status: 500 }
+    );
   }
 }
