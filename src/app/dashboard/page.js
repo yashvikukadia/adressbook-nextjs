@@ -124,7 +124,7 @@ export default function DashboardPage() {
     e.preventDefault();
     const payload = {
       name: formData.name, email: formData.email, phone: formData.phone,
-      address: (formData.street && formData.city && formData.country_id) ? {
+      address: (formData.street || formData.city || formData.country_id) ? {
         street: formData.street, city: formData.city, state: formData.state, country_id: formData.country_id
       } : null,
       profile: { profile_pic: formData.profile_pic || null, website: formData.website || null },

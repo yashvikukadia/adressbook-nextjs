@@ -58,21 +58,21 @@ export async function PUT(request, { params }) {
     if (phone !== undefined) updateData.phone = phone;
 
     // Handle address
-    if (address) {
+    if (address && address.country_id) {
       if (existing.address) {
         updateData.address = {
           update: {
-            street: address.street,
-            city: address.city,
+            street: address.street || '',
+            city: address.city || '',
             state: address.state || '',
             countryId: parseInt(address.country_id),
           },
         };
-      } else if (address.street && address.city && address.country_id) {
+      } else {
         updateData.address = {
           create: {
-            street: address.street,
-            city: address.city,
+            street: address.street || '',
+            city: address.city || '',
             state: address.state || '',
             countryId: parseInt(address.country_id),
           },

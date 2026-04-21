@@ -85,11 +85,11 @@ export async function POST(request) {
       userId: user.id,
     };
 
-    if (address && address.street && address.city && address.country_id) {
+    if (address && address.country_id) {
       personData.address = {
         create: {
-          street: address.street,
-          city: address.city,
+          street: address.street || '',
+          city: address.city || '',
           state: address.state || '',
           countryId: parseInt(address.country_id),
         },

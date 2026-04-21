@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 const { getCurrentUser } = require('@/lib/auth');
 
@@ -25,6 +25,7 @@ export async function POST(request) {
     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     const filepath = path.join(uploadDir, filename);
 
+    await mkdir(uploadDir, { recursive: true });
     await writeFile(filepath, buffer);
 
     return NextResponse.json({
